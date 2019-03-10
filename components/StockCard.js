@@ -5,7 +5,8 @@ const styles = StyleSheet.create({
     stockCard: {
         display: "flex",
         flexDirection: "row",
-        marginBottom:15
+        marginBottom:15,
+        paddingLeft:20
     }, 
     stockName: {
         fontSize:24, 
@@ -14,8 +15,8 @@ const styles = StyleSheet.create({
     stockSymbol: {
     },
     stockImage: {
-        width:40,
-        height: 40,
+        width:50,
+        height: 50,
         resizeMode:"contain",
     },
     stockEstimateUp: {
