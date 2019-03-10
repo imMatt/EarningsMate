@@ -13,17 +13,20 @@ const styles = StyleSheet.create({
     },
     stockSymbol: {
     },
-        stockImage: {
+    stockImage: {
         width:40,
         height: 40,
-        resizeMode:"contain"
+        resizeMode:"contain",
     },
-    stockEstimate: {
-        margin:5,
-        borderRadius:30,
-        backgroundColor:"#88dd88"
+    stockEstimateUp: {
+        alignSelf:"flex-end",
+        color:"#008c1e"
     },
-        stockCardImageView: {
+    stockEstimateDown: {
+        alignSelf:"flex-end",
+        color:"#f44242"
+    },
+    stockCardImageView: {
         alignItems: "center",
         justifyContent: "center",
     },
@@ -32,7 +35,7 @@ const styles = StyleSheet.create({
     }
 })
 
-const StockCard = ({ symbol, name, imageURL, earningsText}) => {
+const StockCard = ({ symbol, quarter, estimatedChangePercent, imageURL}) => {
     return (
         <View style={styles.stockCard}>
         <View style={styles.stockCardImageView}>
@@ -40,8 +43,14 @@ const StockCard = ({ symbol, name, imageURL, earningsText}) => {
         </View>
 
         <View style={styles.stockCardTextView}>
-          <Text style={styles.stockName}>{name}</Text>
-          <Text style={styles.stockSymbol}>{symbol}  <Text style={styles.stockEstimate}> {earningsText} </Text></Text>
+          <Text style={styles.stockName}>{symbol}</Text>
+          <Text style={styles.stockSymbol}>Reporting for {quarter}</Text>
+
+          {(estimatedChangePercent >= 0 ?
+          <Text style={styles.stockEstimateUp}>Estimated increase of {estimatedChangePercent}% Year-On-Year</Text>
+          :
+          <Text style={styles.stockEstimateDown}>Estimated decrease of {Math.abs(estimatedChangePercent)}% Year-On-Year </Text>
+          )}
         </View>
       </View>
     );
