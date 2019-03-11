@@ -11,7 +11,7 @@ export default class TodaysScreen extends React.Component {
 
   constructor(props){
     super(props);
-    this.state = {bto:[]}
+    this.state = {bto:[],amc:[]}
   }
 
   componentWillMount(){
@@ -20,99 +20,18 @@ export default class TodaysScreen extends React.Component {
     .then((responseJson) => {
       return responseJson;
     }).then((json) => {
-      this.setState({bto:json.bto});
+      this.setState({bto:json.bto,amc:json.amc});
     })
     .catch((error) => {
       console.error(error);
     });
-
-    this.setState({bto: [{
-      "actualEPS": 2.1,
-      "consensusEPS": 2.02,
-      "estimatedEPS": 2.02,
-      "announceTime": "BTO",
-      "numberOfEstimates": 14,
-      "EPSSurpriseDollar": 0.08,
-      "EPSReportDate": "2017-05-02",
-      "fiscalPeriod": "Q2 2017",
-      "fiscalEndDate": "2017-03-31",
-      "yearAgo": 1.67,
-      "yearAgoChangePercent": .30,
-      "estimatedChangePercent": -.28,
-      "symbolId": 11,
-      "symbol": "AAPL",
-      "headline": "Apple to aquire North Korea in $22b deal"
-    },{
-      "actualEPS": 2.1,
-      "consensusEPS": 2.02,
-      "estimatedEPS": 2.02,
-      "announceTime": "BTO",
-      "numberOfEstimates": 14,
-      "EPSSurpriseDollar": 0.08,
-      "EPSReportDate": "2017-05-02",
-      "fiscalPeriod": "Q2 2017",
-      "fiscalEndDate": "2017-03-31",
-      "yearAgo": 1.67,
-      "yearAgoChangePercent": .30,
-      "estimatedChangePercent": .28,
-      "symbolId": 11,
-      "symbol": "GOOG",
-      "headline": "Apple to aquire North Korea in $22b deal"
-    },{
-      "actualEPS": 2.1,
-      "consensusEPS": 2.02,
-      "estimatedEPS": 2.02,
-      "announceTime": "BTO",
-      "numberOfEstimates": 14,
-      "EPSSurpriseDollar": 0.08,
-      "EPSReportDate": "2017-05-02",
-      "fiscalPeriod": "Q2 2017",
-      "fiscalEndDate": "2017-03-31",
-      "yearAgo": 1.67,
-      "yearAgoChangePercent": .30,
-      "estimatedChangePercent": -1.28,
-      "symbolId": 11,
-      "symbol": "FB",
-      "headline": "Apple to aquire North Korea in $22b deal"
-    },{
-      "actualEPS": 2.1,
-      "consensusEPS": 2.02,
-      "estimatedEPS": 2.02,
-      "announceTime": "BTO",
-      "numberOfEstimates": 14,
-      "EPSSurpriseDollar": 0.08,
-      "EPSReportDate": "2017-05-02",
-      "fiscalPeriod": "Q2 2017",
-      "fiscalEndDate": "2017-03-31",
-      "yearAgo": 1.67,
-      "yearAgoChangePercent": .30,
-      "estimatedChangePercent": .28,
-      "symbolId": 11,
-      "symbol": "MSFT",
-      "headline": "Apple to aquire North Korea in $22b deal"
-    },{
-      "actualEPS": 2.1,
-      "consensusEPS": 2.02,
-      "estimatedEPS": 2.02,
-      "announceTime": "BTO",
-      "numberOfEstimates": 14,
-      "EPSSurpriseDollar": 0.08,
-      "EPSReportDate": "2017-05-02",
-      "fiscalPeriod": "Q2 2017",
-      "fiscalEndDate": "2017-03-31",
-      "yearAgo": 1.67,
-      "yearAgoChangePercent": .30,
-      "estimatedChangePercent": .28,
-      "symbolId": 11,
-      "symbol": "AMZN",
-      "headline": "Apple to aquire North Korea in $22b deal"
-    }]})
   }
 
   render() {
     const {navigate} = this.props.navigation;
     return (
       <ScrollView style={styles.container}>
+        <Text style={styles.sectionTitle}>Before Market Open</Text>
         {(this.state.bto.length == 0 ? <Text style={styles.emptyTitle}>No Earnings Due Today</Text>: null)}
 
         {
@@ -123,8 +42,20 @@ export default class TodaysScreen extends React.Component {
 
             <StockCard symbol={stock.symbol} quarter={stock.fiscalPeriod} estimatedChangePercent={stock.estimatedChangePercent} imageURL={"https://storage.googleapis.com/iex/api/logos/" + stock.symbol + ".png"}></StockCard>
           </TouchableHighlight>
-        )
-        }
+        )}
+
+        <Text style={styles.sectionTitle}>After Market Close</Text>
+        {(this.state.amc.length == 0 ? <Text style={styles.emptyTitle}>No Earnings Due Today</Text>: null)}
+
+        {
+        this.state.amc.map((stock) =>
+          <TouchableHighlight key={stock.symbol + "Item"} underlayColor={"#eee"} onPress={() => {
+                navigate('StockScreen', {name: 'Jane'})
+              }}>
+
+            <StockCard symbol={stock.symbol} quarter={stock.fiscalPeriod} estimatedChangePercent={stock.estimatedChangePercent} imageURL={"https://storage.googleapis.com/iex/api/logos/" + stock.symbol + ".png"}></StockCard>
+          </TouchableHighlight>
+        )}
       </ScrollView>
     );
   }
@@ -137,8 +68,13 @@ const styles = StyleSheet.create({
     paddingBottom:20
   },
   emptyTitle: {
-    fontSize: 18,
+    fontSize: 12,
+    paddingLeft:20,
+    paddingBottom:20,
     color:"#aaa",
-    alignSelf:"center"
+  },
+  sectionTitle: {
+    fontSize:18,
+    paddingLeft:20
   }
 });
