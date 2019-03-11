@@ -14,12 +14,10 @@ const styles = StyleSheet.create({
         paddingBottom:5
     },
     suprisedTextDown: {
-        fontFamily:"monospace",
         fontWeight:"bold",
         color:"#f44242"
     },
     suprisedTextUp: {
-        fontFamily:"monospace",
         fontWeight:"bold",
         color:"#008c1e"
     }

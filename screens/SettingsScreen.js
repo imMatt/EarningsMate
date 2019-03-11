@@ -2,6 +2,7 @@ import React from 'react';
 import { ScrollView, View, Image, StyleSheet, Text, Button } from 'react-native';
 import EarningsCard from '../components/EarningsCard.js';
 import DividendsCard from '../components/DividendCard.js';
+import NewsCard from '../components/NewsCard.js';
 
 const styles = StyleSheet.create({
   lowerContainer: {
@@ -88,7 +89,8 @@ export default class SettingsScreen extends React.Component {
         <Text style={styles.header}>Dividends</Text>
         <DividendsCard></DividendsCard>
         
-        <Text style={styles.header}>News</Text>
+        <Text style={styles.header}>Latest News</Text>
+        <NewsCard></NewsCard>
       </View>
       </ScrollView>
     )
