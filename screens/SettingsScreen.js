@@ -1,5 +1,7 @@
 import React from 'react';
 import { ScrollView, View, Image, StyleSheet, Text, Button } from 'react-native';
+import EarningsCard from '../components/EarningsCard.js';
+import DividendsCard from '../components/DividendCard.js';
 
 const styles = StyleSheet.create({
   lowerContainer: {
@@ -80,7 +82,12 @@ export default class SettingsScreen extends React.Component {
       </View>
       
       <View style={styles.lowerContainer}>
+        <Text style={styles.header}>Past Earnings</Text>
+        <EarningsCard></EarningsCard>
+
         <Text style={styles.header}>Dividends</Text>
+        <DividendsCard></DividendsCard>
+        
         <Text style={styles.header}>News</Text>
       </View>
       </ScrollView>
