@@ -1,6 +1,7 @@
 import React from 'react';
-import { ScrollView, View, Image, StyleSheet, Text, Button, TouchableHighlight } from 'react-native';
+import { ScrollView, View, Image, StyleSheet, Text, Button, TouchableHighlight, RefreshControl} from 'react-native';
 import StockCard from '../components/StockCard.js'
+import Drilldown from '../components/Drilldown.js'
 
 export default class TodaysScreen extends React.Component {
   static navigationOptions = {
@@ -11,11 +12,11 @@ export default class TodaysScreen extends React.Component {
 
   constructor(props){
     super(props);
-    this.state = {bto:[],amc:[]}
+    this.state = {bto:[],amc:[], focusedSymbol:"AMZN", focusOnSymbol:false, refreshing: false}
   }
 
   componentWillMount(){
-    fetch('https://cloud.iexapis.com/beta/stock/market/today-earnings?token=sk_39e8d5f0966347b2ab46b1999d0dd338')
+    fetch('https://cloud.iexapis.com/beta/stock/market/today-earnings?token=pk_cdd39094382446dcb0ca44b08ba648cd')
     .then((response) => response.json())
     .then((responseJson) => {
       return responseJson;
@@ -27,36 +28,57 @@ export default class TodaysScreen extends React.Component {
     });
   }
 
+  _onRefresh = () => {
+    this.setState({refreshing: true});
+    fetch('https://cloud.iexapis.com/beta/stock/market/today-earnings?token=pk_cdd39094382446dcb0ca44b08ba648cd')
+    .then((response) => response.json())
+    .then((responseJson) => {
+      return responseJson;
+    }).then((json) => {
+      this.setState({bto:json.bto,amc:json.amc});
+      this.setState({refreshing: false});
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  }
+
   render() {
-    const {navigate} = this.props.navigation;
     return (
-      <ScrollView style={styles.container}>
-        <Text style={styles.sectionTitle}>Before Market Open</Text>
-        {(this.state.bto.length == 0 ? <Text style={styles.emptyTitle}>No Earnings Due Today</Text>: null)}
+      <View style={styles.container}>
+        <Drilldown symbol={this.state.focusedSymbol} visible={this.state.focusOnSymbol}></Drilldown>
+        <ScrollView refreshControl={
+          <RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={this._onRefresh}
+        />}>
 
-        {
-        this.state.bto.map((stock) =>
-          <TouchableHighlight key={stock.symbol + "Item"} underlayColor={"#eee"} onPress={() => {
-                navigate('StockScreen', {name: 'Jane'})
-              }}>
+          <Text style={styles.sectionTitle}>Before Market Open</Text>
+          {(this.state.bto.length == 0 ? <Text style={styles.emptyTitle}>No Earnings Due Today</Text>: null)}
 
-            <StockCard symbol={stock.symbol} quarter={stock.fiscalPeriod} estimatedChangePercent={stock.estimatedChangePercent} imageURL={"https://storage.googleapis.com/iex/api/logos/" + stock.symbol + ".png"}></StockCard>
-          </TouchableHighlight>
-        )}
+          {
+          this.state.bto.map((stock) =>
+            <TouchableHighlight key={stock.symbol + "Item"} underlayColor={"#eee"} onPress={() => {
+              this.setState({focusOnSymbol:true, focusedSymbol:stock.symbol});
+            }}>
 
-        <Text style={styles.sectionTitle}>After Market Close</Text>
-        {(this.state.amc.length == 0 ? <Text style={styles.emptyTitle}>No Earnings Due Today</Text>: null)}
+              <StockCard symbol={stock.symbol} quarter={stock.fiscalPeriod} estimatedChangePercent={stock.estimatedChangePercent} imageURL={"https://storage.googleapis.com/iex/api/logos/" + stock.symbol + ".png"}></StockCard>
+            </TouchableHighlight>
+          )}
 
-        {
-        this.state.amc.map((stock) =>
-          <TouchableHighlight key={stock.symbol + "Item"} underlayColor={"#eee"} onPress={() => {
-                navigate('StockScreen', {name: 'Jane'})
-              }}>
+          <Text style={styles.sectionTitle}>After Market Close</Text>
+          {(this.state.amc.length == 0 ? <Text style={styles.emptyTitle}>No Earnings Due Today</Text>: null)}
 
-            <StockCard symbol={stock.symbol} quarter={stock.fiscalPeriod} estimatedChangePercent={stock.estimatedChangePercent} imageURL={"https://storage.googleapis.com/iex/api/logos/" + stock.symbol + ".png"}></StockCard>
-          </TouchableHighlight>
-        )}
-      </ScrollView>
+          {
+          this.state.amc.map((stock) =>
+            <TouchableHighlight key={stock.symbol + "Item"} underlayColor={"#eee"} onPress={() => {
+                }}>
+
+              <StockCard symbol={stock.symbol} quarter={stock.fiscalPeriod} estimatedChangePercent={stock.estimatedChangePercent} imageURL={"https://storage.googleapis.com/iex/api/logos/" + stock.symbol + ".png"}></StockCard>
+            </TouchableHighlight>
+          )}
+        </ScrollView>
+      </View>
     );
   }
 }

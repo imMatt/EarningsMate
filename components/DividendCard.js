@@ -40,7 +40,7 @@ export default class DividendCard extends React.Component {
       }
     
       componentWillMount(){
-        fetch('https://cloud.iexapis.com/beta/stock/aapl/dividends/1y?token=sk_39e8d5f0966347b2ab46b1999d0dd338')
+        fetch('https://cloud.iexapis.com/beta/stock/aapl/dividends/1y?token=pk_cdd39094382446dcb0ca44b08ba648cd')
         .then((response) => response.json())
         .then((responseJson) => {
           return responseJson;
@@ -57,7 +57,7 @@ export default class DividendCard extends React.Component {
             <View style={styles.earningsCard}>
                 {
                 this.state.dividendData.map((payment) =>
-                    <View style={styles.earningsRow}>
+                    <View key={"div" + payment.exDate} style={styles.earningsRow}>
                         <Text style={styles.exText}>{payment.exDate}</Text>
                         <Text style={styles.flagText}>{payment.flag}</Text>
                         <Text style={styles.amountText}>${payment.amount}</Text>

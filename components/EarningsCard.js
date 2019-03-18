@@ -33,7 +33,7 @@ export default class earningsCard extends React.Component {
       }
     
       componentWillMount(){
-        fetch('https://cloud.iexapis.com/beta/stock/aapl/earnings/4?token=sk_39e8d5f0966347b2ab46b1999d0dd338')
+        fetch('https://cloud.iexapis.com/beta/stock/aapl/earnings/4?token=pk_cdd39094382446dcb0ca44b08ba648cd')
         .then((response) => response.json())
         .then((responseJson) => {
           return responseJson;
@@ -50,7 +50,7 @@ export default class earningsCard extends React.Component {
             <View style={styles.earningsCard}>
                 {
                 this.state.earningsData.map((report) =>
-                    <View style={styles.earningsRow}>
+                    <View key={"report" + report.fiscalPeriod} style={styles.earningsRow}>
                         <Text style={styles.quarterText}>{report.fiscalPeriod}</Text>
                         
                         <Text>Exp. ${report.consensusEPS}</Text>

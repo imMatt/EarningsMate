@@ -1,9 +1,10 @@
 import React from 'react';
-import { ScrollView, View, Image, StyleSheet, Text, Button, Linking, TouchableHighlight } from 'react-native';
+import { ScrollView, View, Image, StyleSheet, Text, Button, Linking, TouchableHighlight, WebView } from 'react-native';
 
 const styles = StyleSheet.create({
     newsCard: {
-        marginBottom:15,
+        marginTop:20,
+        marginBottom:20,
         paddingRight:20
     },
     headline: {
@@ -15,7 +16,7 @@ const styles = StyleSheet.create({
         width: null
     },
     related: {
-        fontSize:8,
+        fontSize:14,
         color:"#333333"
     }   
 })
@@ -30,7 +31,7 @@ export default class NewsCard extends React.Component {
       }
     
       componentWillMount(){
-        fetch('https://cloud.iexapis.com/beta/stock/aapl/news?token=sk_39e8d5f0966347b2ab46b1999d0dd338')
+        fetch('https://cloud.iexapis.com/beta/stock/aapl/news?token=pk_cdd39094382446dcb0ca44b08ba648cd')
         .then((response) => response.json())
         .then((responseJson) => {
           return responseJson;
@@ -47,14 +48,15 @@ export default class NewsCard extends React.Component {
             <View style={styles.earningsCard}>
                 {
                 this.state.newsData.map((story) =>
-                    <TouchableHighlight underlayColor={"#eee"} onPress={() => {
-                        Linking.openURL(story.url)
+                    <TouchableHighlight key={"story" + story.headline} underlayColor={"#eee"} onPress={() => {
+                        Linking.openURL(story.url + "?token=pk_cdd39094382446dcb0ca44b08ba648cd")
                     }}>
                         <View style={styles.newsCard}>
                             <Text style={styles.headline}>{story.headline}</Text>
-                            <Image style={styles.picture} source={{uri:story.image + "?token=sk_39e8d5f0966347b2ab46b1999d0dd338"}}></Image>
+                            <Image style={styles.picture} source={{uri:story.image + "?token=pk_cdd39094382446dcb0ca44b08ba648cd"}}></Image>
                             <Text>{new Date(story.datetime).toLocaleString()}</Text>
-                            <Text style={styles.related}>{story.related}</Text>
+                            <Text style={styles.summary}>{story.summary}</Text>
+                            <Text style={styles.related}>Related Stocks: {story.related}</Text>
                         </View>
                     </TouchableHighlight>
                 )}
